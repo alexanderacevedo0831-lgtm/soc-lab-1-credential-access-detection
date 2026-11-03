@@ -1,0 +1,29 @@
+title: LSASS Memory Dump Attempt via Command Line
+id: 6f3a2c1e-8b4d-4e2a-9c7f-1a2b3c4d5e02
+status: experimental
+description: Detects process creation with command lines indicating an attempt to dump LSASS memory using ProcDump or comsvcs.dll MiniDump. Fires on the attempt even when PPL blocks the dump.
+references:
+  - https://attack.mitre.org/techniques/T1003/001/
+author: Alexander Acevedo
+date: 2026-11-03
+tags:
+  - attack.credential-access
+  - attack.t1003.001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_lsass:
+    CommandLine|contains: 'lsass'
+  selection_tool:
+    - CommandLine|contains:
+        - ' -ma '
+        - 'MiniDump'
+        - 'comsvcs'
+    - Image|endswith:
+        - '\procdump.exe'
+        - '\procdump64.exe'
+  condition: selection_lsass and selection_tool
+falsepositives:
+  - Administrators or support staff collecting crash dumps for troubleshooting
+level: high
