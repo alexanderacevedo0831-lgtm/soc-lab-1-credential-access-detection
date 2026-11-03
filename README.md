@@ -38,6 +38,8 @@ Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4625} |
 
 **Result:** Detected. Failed network logons from 192.168.56.101 were recorded. The 4625 logged the account name as `users.txt` because of a tool input mistake, but the source IP and failure pattern are the indicator.
 
+![Event 4625 failed logon from 192.168.56.101](evidence/01-4625-password-spray.png)
+
 ## Attack B: LSASS Credential Dumping (MITRE ATT&CK T1003.001)
 
 **Attempt 1:** `rundll32 comsvcs.dll, MiniDump` against LSASS
@@ -49,6 +51,8 @@ Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4625} |
 C:\Windows\Temp\procdump64.exe -accepteula -ma lsass.exe C:\Windows\Temp\lsass.dmp
 # Error opening lsass.exe (828): Access is denied. (0x00000005)
 ```
+
+![ProcDump denied access to PPL-protected LSASS](evidence/02-procdump-access-denied.png)
 
 ### Detection Engineering Journey
 
@@ -73,6 +77,8 @@ Token Elevation Type:  TokenElevationTypeFull (2)
 Creator Process Name:  C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
 Process Command Line:  "C:\Windows\Temp\procdump64.exe" -accepteula -ma lsass.exe C:\Windows\Temp\lsass.dmp
 ```
+
+![Event 4688 capturing procdump targeting lsass.exe](evidence/03-4688-procdump-lsass.png)
 
 ## Key Findings
 
