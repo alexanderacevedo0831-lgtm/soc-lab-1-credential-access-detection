@@ -1,0 +1,12 @@
+<Sysmon schemaversion="4.90">
+  <EventFiltering>
+    <RuleGroup groupRelation="or">
+      <ProcessAccess onmatch="include">
+        <TargetImage condition="image">lsass.exe</TargetImage>
+      </ProcessAccess>
+    </RuleGroup>
+    <ProcessCreate onmatch="include">
+      <Image condition="image">rundll32.exe</Image>
+    </ProcessCreate>
+  </EventFiltering>
+</Sysmon>
